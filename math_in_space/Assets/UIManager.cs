@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField]
     private Text m_ScoreBoard;
+
+    public GameObject Prefab_Astroid;
 
     private Dictionary<int, string> operation = new Dictionary<int, string>()
     {
@@ -43,6 +46,9 @@ public class UIManager : MonoBehaviour
 
     public int difficulty = 0;
 
+
+    private List<GameObject> instansiatedObjects = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +72,14 @@ public class UIManager : MonoBehaviour
             update = true;
             answerStreak++;
             correctAnswers++;
+            instansiatedObjects.Add(
+                Instantiate(Prefab_Astroid,
+                new Vector3(Random.Range(0, Screen.width), Screen.height - 10, 0),
+                Quaternion.identity));
+
+            var test = instansiatedObjects.FirstOrDefault();
+            var astroid = test.GetComponent<Astroid>();
+            astroid.TextBox.text = "HAHAHAHHAHAHAHA";
         }
 
         //switch (correctAnswers)
