@@ -22,8 +22,11 @@ public class Astroid : MonoBehaviour
 
     private void Update()
     {
-        var collision = AstroidObject.GetComponent<Collision>();
-        HasBeenHit = collision.HasBeenHit;
+        if (tag != "Player")
+        {
+            var collision = AstroidObject.GetComponent<Collision>();
+            HasBeenHit = collision.HasBeenHit;
+        }
 
         transform.position = Vector3.MoveTowards(
             transform.position,
