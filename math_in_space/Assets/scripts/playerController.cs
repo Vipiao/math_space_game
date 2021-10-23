@@ -58,17 +58,25 @@ public class playerController : MonoBehaviour
         // Shoot.
         if (Input.GetKey("space") && Time.time >= nextShootTime)
         {
-            nextShootTime = Time.time + 0.5f; // 0.5 seconds.
+            nextShootTime = Time.time + 0.2f; // 0.5 seconds.
             GameObject bolt = Object.Instantiate(
                 shootObject,
                 rigidBody.position,
                 rigidBody.rotation
                 );
-            float shootSpeed = 10.0f;
+            float shootSpeed = 20.0f;
             Rigidbody boltRigidBody = bolt.GetComponent<Rigidbody>();
             boltRigidBody.velocity =
                 rigidBody.velocity + rigidBody.transform.forward * shootSpeed;
             boltRigidBody.velocity = new Vector3(boltRigidBody.velocity.x, 0, boltRigidBody.velocity.z);
         }
+        //Debug.Log(rigidBody.position.x);
+
+        // Boundaries.
+        Vector3 lowerLeft;
+        Vector3 upperRight;
+        Utilities.getBoundaries(out lowerLeft, out upperRight);
+        //Debug.Log("rigidBody.position" + rigidBody.position);
+        rigidBody.position = Utilities.limitWithinBounds(rigidBody.position);
     }
 }
