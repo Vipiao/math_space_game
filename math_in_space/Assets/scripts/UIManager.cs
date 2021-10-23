@@ -10,6 +10,13 @@ public class UIManager : MonoBehaviour
 
     public GameObject Prefab_Astroid;
 
+    public GameObject asteroidSound;
+    public GameObject lifeLostSound;
+    public GameObject correctEffect;
+    public GameObject explosionEffect;
+    public GameObject explosionEffectCorrect;
+    public GameObject hearts;
+
     private Dictionary<int, string> operation = new Dictionary<int, string>()
     {
         { 0, "*" },
@@ -84,6 +91,14 @@ public class UIManager : MonoBehaviour
             var astroid = obj.GetComponent<Astroid>();
             if (astroid.IsScoreObject && astroid.HasBeenHit)
             {
+                //
+                Object.Instantiate(correctEffect, new Vector3(), Quaternion.identity);
+                for (int i = 0; i < 30; i++)
+                {
+                    Object.Instantiate(
+                        explosionEffectCorrect, astroid.transform.position, Quaternion.identity);
+                }
+                //
                 correctAnswers++;
                 answerStreak++;
                 removeObjects.Add(obj);
@@ -92,6 +107,15 @@ public class UIManager : MonoBehaviour
             }
             else if (astroid.HasBeenHit)
             {
+                // Effects.
+                Object.Instantiate(lifeLostSound, new Vector3(), Quaternion.identity);
+                for(int i = 0; i < 30; i++)
+                {
+                    Object.Instantiate(explosionEffect, astroid.transform.position, Quaternion.identity);
+                    //Object.Instantiate(explosionEffect, new Vector3(0,0,0), Quaternion.identity);
+                }
+
+                //
                 removeObjects.Add(obj);
                 Life--;
                 answerStreak = 0;
@@ -109,18 +133,45 @@ public class UIManager : MonoBehaviour
             answerStreak++;
             correctAnswers++;
         }
+
+        //
+        hearts.transform.GetChild(0).gameObject.SetActive(false);
+        hearts.transform.GetChild(1).gameObject.SetActive(false);
+        hearts.transform.GetChild(2).gameObject.SetActive(false);
+        if (Life == 1) {
+            int a = 0;
+        }
+        if (Life-1 >= 0 && Life-1 <= 2)
+        {
+            hearts.transform.GetChild(Life - 1).gameObject.SetActive(true);
+        }
     }
 
+    public Vector3 getAsteroidPosition()
+    {
+        Vector3 lowerLeft, upperRight;
+        Utilities.getBoundaries(out lowerLeft, out upperRight);
+        //Vector3 position = new Vector3(Random.Range(lowerLeft.x, upperRight.x), 0, 0);
+        Vector3 position = new Vector3(
+            Random.Range(lowerLeft.x, upperRight.x),
+            0,
+            Random.Range(lowerLeft.z, upperRight.z));
+
+        return position;
+    }
 
     public void AddScoreObjects()
     {
         (var question, var answer) = RandomMultiplicationQuestion();
         AnswerToQuesiton = answer;
         m_ScoreBoard.text = question;
-        Vector3 lowerLeft, upperRight;
-        Utilities.getBoundaries(out lowerLeft, out upperRight);
+        //Vector3 lowerLeft, upperRight;
+        //Utilities.getBoundaries(out lowerLeft, out upperRight);
+        //Vector3 position = new Vector3(Random.Range(lowerLeft.x, upperRight.x), 0, 0);
+        //position = new Vector3(0, 0, 0);
+        Vector3 position = getAsteroidPosition();
         var firstAstroid = Instantiate(Prefab_Astroid,
-                new Vector3(Random.Range(lowerLeft.x*0.4f, upperRight.x*0.4f), 0, 0),
+                position,
                 Quaternion.identity);
 
         var firstComponent = firstAstroid.GetComponent<Astroid>();
@@ -133,10 +184,15 @@ public class UIManager : MonoBehaviour
 
     public void AddRandomAstroids()
     {
+        // Play asteroid sound.
+        Object.Instantiate(asteroidSound, new Vector3(), Quaternion.identity);
+
+        //
         for (int i = 0; i < Random.Range(1, difficulty * 2); i++)
         {
+            Vector3 position = getAsteroidPosition();
             var gameObject = Instantiate(Prefab_Astroid,
-            new Vector3(Random.Range(0, 10), 0, 0),
+            position,
             Quaternion.identity);
 
             var astroidComponent = gameObject.GetComponent<Astroid>();

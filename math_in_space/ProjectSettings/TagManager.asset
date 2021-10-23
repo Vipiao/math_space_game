@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Astroid
+  - Bolt
   layers:
   - Default
   - TransparentFX

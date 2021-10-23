@@ -9,6 +9,7 @@ public class playerController : MonoBehaviour
     public float angularAcceleration;
 
     public GameObject shootObject;
+    public GameObject shootingSound;
 
     float nextShootTime = 0;
 
@@ -40,6 +41,10 @@ public class playerController : MonoBehaviour
         {
             vertical = 0;
         }
+        // Disable/enable fire.
+        this.gameObject.transform.GetChild(0).gameObject.SetActive(vertical != 0.0f || horizontal != 0);
+        this.gameObject.transform.GetChild(1).gameObject.SetActive(vertical != 0.0f || horizontal != 0);
+
         Rigidbody rigidBody = GetComponent<Rigidbody>();
         rigidBody.angularVelocity += new Vector3(0, horizontal, 0) * angularAcceleration * Time.deltaTime;
         rigidBody.velocity += rigidBody.transform.forward * vertical * acceleration * Time.deltaTime;
@@ -58,7 +63,7 @@ public class playerController : MonoBehaviour
         // Shoot.
         if (Input.GetKey("space") && Time.time >= nextShootTime)
         {
-            nextShootTime = Time.time + 0.2f; // 0.5 seconds.
+            nextShootTime = Time.time + 0.4f; // 0.5 seconds.
             GameObject bolt = Object.Instantiate(
                 shootObject,
                 rigidBody.position,
@@ -69,6 +74,9 @@ public class playerController : MonoBehaviour
             boltRigidBody.velocity =
                 rigidBody.velocity + rigidBody.transform.forward * shootSpeed;
             boltRigidBody.velocity = new Vector3(boltRigidBody.velocity.x, 0, boltRigidBody.velocity.z);
+
+            // Create sound.
+            Object.Instantiate(shootingSound, new Vector3(), Quaternion.identity);
         }
         //Debug.Log(rigidBody.position.x);
 

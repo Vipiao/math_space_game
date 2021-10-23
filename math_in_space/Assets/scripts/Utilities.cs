@@ -45,4 +45,12 @@ public class Utilities : MonoBehaviour
         }
         return new Vector3(x, y, z);
     }
+    public static Quaternion turnTowards(Vector3 target, float factor)
+    {
+        Quaternion rotation = Quaternion.FromToRotation(
+            target,
+            Vector3.Lerp(target, Vector3.up, factor)
+        );
+        return rotation;
+    }
 }
