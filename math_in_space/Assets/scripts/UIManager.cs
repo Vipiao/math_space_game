@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -69,6 +70,7 @@ public class UIManager : MonoBehaviour
 
         if (Life == 0)
         {
+            SceneTransitionStorage.TotalScore = correctAnswers;
             SceneManager.LoadScene("End_Scene", LoadSceneMode.Single);
         }
 
@@ -109,7 +111,7 @@ public class UIManager : MonoBehaviour
             {
                 // Effects.
                 Object.Instantiate(lifeLostSound, new Vector3(), Quaternion.identity);
-                for(int i = 0; i < 30; i++)
+                for (int i = 0; i < 30; i++)
                 {
                     Object.Instantiate(explosionEffect, astroid.transform.position, Quaternion.identity);
                     //Object.Instantiate(explosionEffect, new Vector3(0,0,0), Quaternion.identity);
@@ -130,18 +132,19 @@ public class UIManager : MonoBehaviour
 
         if (Input.GetKeyDown("space"))
         {
-            answerStreak++;
-            correctAnswers++;
+            //answerStreak++;
+            //correctAnswers++;
         }
 
         //
         hearts.transform.GetChild(0).gameObject.SetActive(false);
         hearts.transform.GetChild(1).gameObject.SetActive(false);
         hearts.transform.GetChild(2).gameObject.SetActive(false);
-        if (Life == 1) {
+        if (Life == 1)
+        {
             int a = 0;
         }
-        if (Life-1 >= 0 && Life-1 <= 2)
+        if (Life - 1 >= 0 && Life - 1 <= 2)
         {
             hearts.transform.GetChild(Life - 1).gameObject.SetActive(true);
         }
