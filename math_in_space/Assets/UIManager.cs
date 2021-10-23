@@ -117,8 +117,10 @@ public class UIManager : MonoBehaviour
         (var question, var answer) = RandomMultiplicationQuestion();
         AnswerToQuesiton = answer;
         m_ScoreBoard.text = question;
+        Vector3 lowerLeft, upperRight;
+        Utilities.getBoundaries(out lowerLeft, out upperRight);
         var firstAstroid = Instantiate(Prefab_Astroid,
-                new Vector3(Random.Range(0, 10), 0, 0),
+                new Vector3(Random.Range(lowerLeft.x*0.4f, upperRight.x*0.4f), 0, 0),
                 Quaternion.identity);
 
         var firstComponent = firstAstroid.GetComponent<Astroid>();
