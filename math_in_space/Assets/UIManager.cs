@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -59,6 +59,12 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Life == 0)
+        {
+            SceneManager.LoadScene("End_Scene", LoadSceneMode.Single);
+        }
+
         if (init)
         {
             init = false;
