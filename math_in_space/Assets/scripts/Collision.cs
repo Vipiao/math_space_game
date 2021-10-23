@@ -8,6 +8,10 @@ public class Collision : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        HasBeenHit = true;
+        if (other.tag != "Player")
+        {
+            HasBeenHit = true;
+            Object.Destroy(other.gameObject);
+        }
     }
 }
