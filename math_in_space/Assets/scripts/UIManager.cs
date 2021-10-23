@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public GameObject explosionEffect;
     public GameObject explosionEffectCorrect;
     public GameObject hearts;
+    public GameObject yaySound;
 
     private Dictionary<int, string> operation = new Dictionary<int, string>()
     {
@@ -92,7 +93,14 @@ public class UIManager : MonoBehaviour
             if (astroid.IsScoreObject && astroid.HasBeenHit)
             {
                 //
-                Object.Instantiate(correctEffect, new Vector3(), Quaternion.identity);
+                if ((difficulty+1) % 5 == 0)
+                {
+                    Object.Instantiate(correctEffect, new Vector3(), Quaternion.identity);
+                }
+                else
+                {
+                    Object.Instantiate(yaySound, new Vector3(), Quaternion.identity);
+                }
                 for (int i = 0; i < 30; i++)
                 {
                     Object.Instantiate(
@@ -138,9 +146,6 @@ public class UIManager : MonoBehaviour
         hearts.transform.GetChild(0).gameObject.SetActive(false);
         hearts.transform.GetChild(1).gameObject.SetActive(false);
         hearts.transform.GetChild(2).gameObject.SetActive(false);
-        if (Life == 1) {
-            int a = 0;
-        }
         if (Life-1 >= 0 && Life-1 <= 2)
         {
             hearts.transform.GetChild(Life - 1).gameObject.SetActive(true);
