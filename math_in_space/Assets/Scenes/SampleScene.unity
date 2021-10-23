@@ -155,6 +155,7 @@ MonoBehaviour:
   m_ScoreBoard: {fileID: 1612890125}
   Prefab_Astroid: {fileID: 5260394010300803329, guid: d87fd9995d48b14408530af48389ff01, type: 3}
   difficulty: 0
+  Life: 3
 --- !u!4 &465704582
 Transform:
   m_ObjectHideFlags: 0
@@ -360,7 +361,7 @@ GameObject:
   - component: {fileID: 670782251}
   m_Layer: 0
   m_Name: space_ship
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -926,8 +927,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 2
-  m_fontSizeBase: 2
+  m_fontSize: 5
+  m_fontSizeBase: 5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
