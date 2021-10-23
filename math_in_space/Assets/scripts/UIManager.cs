@@ -95,7 +95,7 @@ public class UIManager : MonoBehaviour
             if (astroid.IsScoreObject && astroid.HasBeenHit)
             {
                 //
-                if ((difficulty+1) % 5 == 0)
+                if ((difficulty + 1) % 5 == 0)
                 {
                     Object.Instantiate(correctEffect, new Vector3(), Quaternion.identity);
                 }
@@ -149,7 +149,7 @@ public class UIManager : MonoBehaviour
         hearts.transform.GetChild(1).gameObject.SetActive(false);
         hearts.transform.GetChild(2).gameObject.SetActive(false);
 
-        if (Life-1 >= 0 && Life-1 <= 2)
+        if (Life - 1 >= 0 && Life - 1 <= 2)
         {
             hearts.transform.GetChild(Life - 1).gameObject.SetActive(true);
         }
@@ -204,7 +204,11 @@ public class UIManager : MonoBehaviour
             Quaternion.identity);
 
             var astroidComponent = gameObject.GetComponent<Astroid>();
-            astroidComponent.TextBox.text = Random.Range(1, AnswerToQuesiton).ToString();
+            var localNumber = Random.Range(1, AnswerToQuesiton);
+            if (localNumber == AnswerToQuesiton)
+                localNumber++;
+
+            astroidComponent.TextBox.text = Random.Range(1, localNumber).ToString();
             astroidComponent.IsScoreObject = false;
             instansiatedObjects.Add(gameObject);
 
