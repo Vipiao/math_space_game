@@ -15,10 +15,20 @@ public class Astroid : MonoBehaviour
 
     public int value;
 
+    private void Start()
+    {
+
+    }
+
     private void Update()
     {
         var collision = AstroidObject.GetComponent<Collision>();
         HasBeenHit = collision.HasBeenHit;
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            new Vector3(transform.position.x, transform.position.y, -10.0f),
+            0.001f);
     }
 
 }
