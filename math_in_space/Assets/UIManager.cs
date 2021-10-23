@@ -1,12 +1,14 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private Text m_ScoreBoard;
+    private TextMeshPro m_ScoreBoard;
+
+    public GameObject Prefab_Astroid;
 
     private Dictionary<int, string> operation = new Dictionary<int, string>()
     {
@@ -31,9 +33,7 @@ public class UIManager : MonoBehaviour
         { 10, 300 }
     };
 
-    protected bool update = true;
-
-    private int questionAnswer = 0;
+    private int AnswerToQuesiton = 0;
 
     private float gameTime;
 
@@ -42,6 +42,12 @@ public class UIManager : MonoBehaviour
     private int correctAnswers = 0;
 
     public int difficulty = 0;
+
+    private bool init = true;
+
+    public int Life = 3;
+
+    private List<GameObject> instansiatedObjects = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -53,53 +59,103 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (update)
+        if (init)
         {
-            (var question, var answer) = RandomMultiplicationQuestion();
-            questionAnswer = answer;
-            m_ScoreBoard.text = question;
-            update = false;
+            init = false;
+            AddScoreObjects();
+            AddRandomAstroids();
+
+        }
+
+        var objs = GameObject.FindGameObjectsWithTag("Astroid");
+
+        var removeObjects = new List<GameObject>();
+        foreach (var obj in objs)
+        {
+            if (obj == null)
+                continue;
+
+            var astroid = obj.GetComponent<Astroid>();
+            if (astroid.IsScoreObject && astroid.HasBeenHit)
+            {
+                correctAnswers++;
+                answerStreak++;
+                removeObjects.Add(obj);
+                difficulty++;
+                ResetGame();
+            }
+            else if (astroid.HasBeenHit)
+            {
+                removeObjects.Add(obj);
+                Life--;
+                answerStreak = 0;
+            }
+        }
+
+        foreach (var item in removeObjects)
+        {
+            instansiatedObjects.Remove(item);
+            Destroy(item);
         }
 
         if (Input.GetKeyDown("space"))
         {
-            update = true;
             answerStreak++;
             correctAnswers++;
         }
+    }
 
-        //switch (correctAnswers)
-        //{
-        //    case 10:
-        //        difficulty = 1;
-        //        break;
-        //    case 15:
-        //        difficulty = 2;
-        //        break;
-        //    case 20:
-        //        difficulty = 3;
-        //        break;
-        //}
 
+    public void AddScoreObjects()
+    {
+        (var question, var answer) = RandomMultiplicationQuestion();
+        AnswerToQuesiton = answer;
+        m_ScoreBoard.text = question;
+        var firstAstroid = Instantiate(Prefab_Astroid,
+                new Vector3(Random.Range(0, 10), 0, 0),
+                Quaternion.identity);
+
+        var firstComponent = firstAstroid.GetComponent<Astroid>();
+        firstComponent.TextBox.text = AnswerToQuesiton.ToString();
+        firstComponent.IsScoreObject = true;
+
+        instansiatedObjects.Add(firstAstroid);
 
     }
 
-    public void CheckAnswer(int inputAnswer)
+    public void AddRandomAstroids()
     {
-        if (inputAnswer == questionAnswer)
+        for (int i = 0; i < Random.Range(1, difficulty * 2); i++)
         {
-            correctAnswers++;
+            var gameObject = Instantiate(Prefab_Astroid,
+            new Vector3(Random.Range(0, 10), 0, 0),
+            Quaternion.identity);
+
+            var astroidComponent = gameObject.GetComponent<Astroid>();
+            astroidComponent.TextBox.text = Random.Range(1, AnswerToQuesiton).ToString();
+            astroidComponent.IsScoreObject = false;
+            instansiatedObjects.Add(gameObject);
+
         }
     }
 
+    public void ResetGame()
+    {
+        foreach (var obj in instansiatedObjects)
+        {
+            Destroy(obj);
+        }
 
+        AddScoreObjects();
+        AddRandomAstroids();
+    }
 
     private (string, int) RandomMultiplicationQuestion()
     {
         System.Random rand = new System.Random();
         var first = rand.Next(1, 10);
         var second = rand.Next(0, 10);
-        var mathOperator = rand.Next(0, difficulty);
+        var mathOperator = rand.Next(0, difficulty % 3);
 
         //var answer = first * second;
         var answer = mathOperator switch
